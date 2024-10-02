@@ -102,7 +102,7 @@ docker-compose up --build
 ### Если проект запускается первый раз нужно сделать миграцию
 
 ```bash
-migrate -path ./db/migrations -database 'postgres://postgres:1234@host.docker.internal:5436/music-library?sslmode=disable' up
+migrate -path ./migrations -database 'postgres://postgres:1234@host.docker.internal:5436/music-library?sslmode=disable' up
 ```
 
 ### Если запускается без докера 
