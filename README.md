@@ -108,7 +108,7 @@ migrate -path ./migrations -database 'postgres://postgres:1234@host.docker.inter
 ### Если запускается без докера 
 
 ```bash
-migrate -path ./db/migrations -database 'postgres://postgres:1234@localhost:5436/music-library?sslmode=disable' up
+migrate -path ./migrations -database 'postgres://postgres:1234@localhost:5436/music-library?sslmode=disable' up
 ```
 
 ### Использование локальной машины
