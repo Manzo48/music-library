@@ -1,0 +1,257 @@
+basePath: /
+definitions:
+  error_message.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Song:
+    properties:
+      details:
+        allOf:
+        - $ref: '#/definitions/model.SongDetail'
+        description: Дополнительные детали о песне
+      group:
+        description: Исполнитель или группа
+        type: string
+      id:
+        description: Уникальный идентификатор песни
+        type: integer
+      song:
+        description: Название песни
+        type: string
+    type: object
+  model.SongDetail:
+    properties:
+      album:
+        type: string
+      artist:
+        type: string
+      duration:
+        description: Продолжительность
+        type: string
+      genre:
+        description: Жанр
+        type: string
+      key:
+        description: Ключ
+        type: string
+      link:
+        type: string
+      release_date:
+        type: string
+      tempo:
+        description: Темп
+        type: string
+      text:
+        type: string
+    type: object
+host: localhost:9000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a simple API for managing a music library.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Music Library API
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Get songs with optional filters (group, artist, album, song) and
+        pagination
+      parameters:
+      - description: Filter by group
+        in: query
+        name: group
+        type: string
+      - description: Filter by artist
+        in: query
+        name: artist
+        type: string
+      - description: Filter by album
+        in: query
+        name: album
+        type: string
+      - description: Filter by song title
+        in: query
+        name: song
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of items per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of songs
+          schema:
+            items:
+              $ref: '#/definitions/model.Song'
+            type: array
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+      summary: Get list of songs
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Add a new song to the library
+      parameters:
+      - description: Song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/model.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Song added successfully with ID
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "502":
+          description: Failed to fetch data from external API
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+      summary: Add a new song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      description: Remove a song from the library by its ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song deleted successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid song ID
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+      summary: Delete a song by ID
+      tags:
+      - songs
+    get:
+      consumes:
+      - application/json
+      description: Get song text by song ID, verse, and limit
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: Verse number
+        in: query
+        name: verse
+        type: integer
+      - default: 4
+        description: Number of lines per verse
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song text
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "404":
+          description: Song not found
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+      summary: Get song text by ID
+      tags:
+      - songs
+    put:
+      consumes:
+      - application/json
+      description: Update song details by ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated song data
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/model.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song updated successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/error_message.ErrorResponse'
+      summary: Update an existing song
+      tags:
+      - songs
+swagger: "2.0"

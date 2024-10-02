@@ -1,0 +1,12 @@
+server:
+  port: 9000
+
+database:
+  host: db
+  port: 5432
+  user: postgres
+  password: 1234
+  name: music-library
+api:
+  base_url: "https://api.genius.com"
+  access_token: "OfITv11k1qATBTafN7M5IpmD96Nyh4cSx5gtUAoRiOPIOQY6HCrFOhHh1qzvloG-"
