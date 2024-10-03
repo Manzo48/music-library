@@ -126,7 +126,7 @@ go run cmd/main.go ./configs/local_config.yml
 ### Пример запроса для получения списка песен
 
 ```bash
-GET /api/v1/songs?page=1&group=The%20Beatles
+GET /api/v1/songs?page=1&group=TheBeatles
 ```
 
 ### Пример запроса для получения текста песни
