@@ -18,13 +18,12 @@ type SongService interface {
 	AddSong(ctx context.Context, song model.Song) (int, error)
 }
 
-// songService реализует интерфейс SongService.
 type songService struct {
 	repo   repository.SongRepository
 	logger *logrus.Logger
 }
 
-// NewSongService создает новый экземпляр songService.
+
 func NewSongService(repo repository.SongRepository, logger *logrus.Logger) SongService {
 	return &songService{
 		repo:   repo,
@@ -61,7 +60,7 @@ func (s *songService) GetSongText(ctx context.Context, songID int, verse int, li
 	return verses, nil
 }
 
-// DeleteSong удаляет песню по ID.
+
 func (s *songService) DeleteSong(ctx context.Context, songID int) error {
 	s.logger.Debug("Attempting to delete song ID: ", songID)
 
@@ -74,7 +73,7 @@ func (s *songService) DeleteSong(ctx context.Context, songID int) error {
 	return nil
 }
 
-// UpdateSong обновляет данные песни.
+
 func (s *songService) UpdateSong(ctx context.Context, song model.Song) error {
 	s.logger.Debug("Attempting to update song: ", song)
 

@@ -266,14 +266,14 @@ func (r *postgresSongRepository) GetSongs(ctx context.Context, filter model.Song
 }
 
 func (r *postgresSongRepository) UpdateSong(ctx context.Context, song model.Song) error {
-    // Обновляем данные в таблице songs
+   
     _, err := r.db.Exec(ctx, "UPDATE songs SET group_name = $1, song_name = $2 WHERE id = $3", 
     song.Group, song.Title, song.ID)
     if err != nil {
         return err
     }
     
-    // Обновляем данные в таблице song_details
+
     _, err = r.db.Exec(ctx, `
     UPDATE song_details 
     SET album = $1, text = $2 
@@ -298,12 +298,12 @@ func formatSongText(text string) []string {
     text = strings.ReplaceAll(text, "[Chorus", "\n[Chorus")
     text = strings.ReplaceAll(text, "[Bridge", "\n[Bridge")
 
-    // Далее можно также добавлять переносы строк после знаков пунктуации для длинных строк
+  
     text = strings.ReplaceAll(text, ". ", ".\n")
     text = strings.ReplaceAll(text, "! ", "!\n")
     text = strings.ReplaceAll(text, "? ", "?\n")
 
-    // Разделяем текст по строкам
+
     lines := strings.Split(text, "\n")
 
     // Теперь проверяем каждую строку, чтобы добавить переносы в случае, если строки склеены
@@ -327,9 +327,8 @@ func formatSongText(text string) []string {
 func insertSpaceBeforeUppercase(line string) string {
     var result []rune
     for i, char := range line {
-        // Если текущий символ - заглавная буква, и перед ним нет пробела
         if i > 0 && unicode.IsUpper(char) && line[i-1] != ' ' {
-            result = append(result, ' ') // Вставляем пробел
+            result = append(result, ' ') 
         }
         result = append(result, char)
     }

@@ -1,9 +1,9 @@
 APP=cmd/main.go
 SCHEMA=./migrations
-DB='postgres://postgres:yourpassword@127.0.0.1:5436/music_library?sslmode=disable'
+DB='postgres://postgres:1234@host.docker.internal/music_library?sslmode=disable'
 
 build:
-	docker-compose build app
+	docker-compose up --build
 
 run:
 	docker-compose up app
