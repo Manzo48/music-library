@@ -12,13 +12,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// SongHandler обрабатывает HTTP запросы для песен
+
 type SongHandler struct {
 	service service.SongService
 	logger   *logrus.Logger
 }
 
-// NewSongHandler конструктор, возвращающий новый SongHandler
+
 func NewSongHandler(service service.SongService, logger *logrus.Logger) *SongHandler {
 	return &SongHandler{
 		service: service,
@@ -26,7 +26,7 @@ func NewSongHandler(service service.SongService, logger *logrus.Logger) *SongHan
 	}
 }
 
-// InitRoutes инициализирует маршруты для песен
+
 func (h *SongHandler) InitRoutes(router *gin.Engine) {
 	songs := router.Group("/songs")
 	{	
@@ -60,11 +60,11 @@ func (h *SongHandler) GetSongs(c *gin.Context) {
     album := c.Query("album")
     song := c.Query("song")
 
-    // Получаем параметры page и pageSize с установкой значений по умолчанию
+
     pageStr := c.DefaultQuery("page", "1")
     pageSizeStr := c.DefaultQuery("pageSize", "10")
 
-    // Конвертируем page в int
+
     page, err := strconv.Atoi(pageStr)
     if err != nil || page <= 0 {
         h.logger.Warn("Invalid page number: ", pageStr)
@@ -72,7 +72,7 @@ func (h *SongHandler) GetSongs(c *gin.Context) {
         return
     }
 
-    // Конвертируем pageSize в int
+  
     pageSize, err := strconv.Atoi(pageSizeStr)
     if err != nil || pageSize <= 0 {
         h.logger.Warn("Invalid page size: ", pageSizeStr)
@@ -80,12 +80,12 @@ func (h *SongHandler) GetSongs(c *gin.Context) {
         return
     }
 
-    // Ограничиваем максимальный размер страницы
+   
     if pageSize > 100 {
         pageSize = 100
     }
 
-    // Создаём фильтр из параметров запроса
+  
     filter := model.SongFilter{
         Group:      group,
         Artist:     artist,
@@ -93,7 +93,7 @@ func (h *SongHandler) GetSongs(c *gin.Context) {
         Song:       song,
     }
 
-    // Получаем песни через сервис с фильтрацией и пагинацией
+   
     response, err := h.service.GetSongs(c.Request.Context(), filter, page, pageSize)
     if err != nil {
         h.logger.Error("GetSongs error: ", err)
@@ -101,7 +101,7 @@ func (h *SongHandler) GetSongs(c *gin.Context) {
         return
     }
 
-    // Возвращаем ответ
+    
     c.JSON(http.StatusOK, response)
 }
 
@@ -131,8 +131,8 @@ func (h *SongHandler) GetSongByID(c *gin.Context) {
         return
     }
     
-    // Получаем параметры куплета и лимита из query, если они указаны
-    verseParam := c.DefaultQuery("verse", "1") // По умолчанию 1-й куплет
+   
+    verseParam := c.DefaultQuery("verse", "1") 
     verse, err := strconv.Atoi(verseParam)
     if err != nil {
         h.logger.Warn("Invalid verse parameter: ", verseParam)
@@ -140,7 +140,7 @@ func (h *SongHandler) GetSongByID(c *gin.Context) {
         return
     }
 
-    limitParam := c.DefaultQuery("limit", "4") // По умолчанию 4 строки на куплет
+    limitParam := c.DefaultQuery("limit", "4") 
     limit, err := strconv.Atoi(limitParam)
     if err != nil {
         h.logger.Warn("Invalid limit parameter: ", limitParam)
@@ -150,7 +150,6 @@ func (h *SongHandler) GetSongByID(c *gin.Context) {
 
     text, err := h.service.GetSongText(c.Request.Context(), id, verse, limit)
     if err != nil {
-        // Используем простой текст ошибки вместо error_message.ErrNotFound
         if err.Error() == "song not found" {
             c.JSON(http.StatusNotFound, error_message.ErrorResponse{Message: "Song not found"})
             return
